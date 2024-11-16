@@ -34,13 +34,8 @@ jobs:
         with:
           format: YYYY-MM-DDTHH-mm-ss
           utcOffset: "+09:00"
-      - name: Set artifact
-        run: |
-        # 원하는 JAR 파일을 명시적으로 선택
-          artifact=$(ls ./build/libs/*-SNAPSHOT.jar | head -n 1)  # SNAPSHOT 파일 선택
-          echo "artifact=$artifact" >> $GITHUB_ENV
-
-
+      - name : Set artifact
+        run: echo "artifact=$(ls ./build/libs)" >> $GITHUB_ENV
       # 빈스토크 배포
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@v20
@@ -51,9 +46,4 @@ jobs:
           environment_name: BackEnd-Test-env
           version_label: github-action-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
-          deployment_package: ${{env.artifact}}
-      
-      ## 테스트
-      ## 테스트들
-      ## 테스트들
-      ### 주석 추가
+          deployment_package: ./build/libs/${{env.artifact}}
