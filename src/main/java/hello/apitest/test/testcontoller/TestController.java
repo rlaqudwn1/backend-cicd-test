@@ -14,4 +14,8 @@ public class TestController {
     public ResponseEntity<?> test() {
         return ResponseEntity.status(200).body(Map.of("hello", "world"));
     }
+    @GetMapping("/1")
+    public ResponseEntity<?> test1() {
+        return ResponseEntity.status(200).body(Map.of("hello", "world"));
+    }
 }
