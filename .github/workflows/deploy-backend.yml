@@ -34,9 +34,12 @@ jobs:
         with:
           format: YYYY-MM-DDTHH-mm-ss
           utcOffset: "+09:00"
-      - name : Set artifact
-        run: echo "artifact=$(ls ./build/libs)" >> $GITHUB_ENV
-      # 빈스토크 배포
+      - name: Set artifact
+        run: |
+          # 'plain.jar'를 제외한 다른 JAR 파일만 선택
+          artifact=$(ls ./build/libs/*.jar | grep -v 'plain.jar' | head -n 1)  # plain.jar 제외
+          echo "artifact=$(basename $artifact)" >> $GITHUB_ENV  # 파일명만 환경 변수로 설정
+
       - name: Beanstalk Deploy
         uses: einaregilsson/beanstalk-deploy@v20
         with:
@@ -46,4 +49,5 @@ jobs:
           environment_name: BackEnd-Test-env
           version_label: github-action-${{steps.current-time.outputs.formattedTime}}
           region: ap-northeast-2
-          deployment_package: ./build/libs/${{env.artifact}}
+          deployment_package: ./build/libs/${{env.artifact}}  # 선택된 JAR 파일 경로
+
